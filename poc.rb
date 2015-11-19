@@ -18,6 +18,12 @@ class MailBox
   def empty?
     @entries.empty?
   end
+
+  def length
+    @entries.size
+  end
+
+  alias_method :count, :length
 end
 
 # anything that respond to process is a messgae
@@ -32,14 +38,50 @@ end
 # end
 
 class Message
+
+  STATES = %w(pending started finished failed)
+
+  STATES.each do |st|
+    define_method "#{st}?" do
+      self.status == st
+    end
+  end
+
   def initialize(text)
     @text = text
+    @status = 'pending'
+  end
+
+  def status
+    @status
+  end
+
+  def start!
+    self.started! if self.pending?
+  end
+
+  def finish!
+    self.finished! if self.started?
+  end
+
+  def fail!
+    self.failed! if self.started?
+  end
+
+  def processed?
+    !self.pending?
   end
 
   def process
-    puts "START"
     puts "Processing message #{@text}"
-    puts "END"
+  end
+
+  private
+
+  STATES.each do |st|
+    define_method "#{st}!" do
+      self.status = st
+    end
   end
 end
 
@@ -82,8 +124,11 @@ class Actor
         message = mailbox.dequeue
 
         begin
+          message.start!
           message.process
+          message.finish!
         rescue Exception => e
+          message.fail!
           puts e.backtrace
         end
       end
