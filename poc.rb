@@ -57,19 +57,19 @@ class Message
   end
 
   def start!
-    self.started! if self.pending?
+    started! if self.pending?
   end
 
   def finish!
-    self.finished! if self.started?
+    finished! if self.started?
   end
 
   def fail!
-    self.failed! if self.started?
+    failed! if self.started?
   end
 
   def processed?
-    !self.pending?
+    !pending?
   end
 
   def process
@@ -80,7 +80,7 @@ class Message
 
   STATES.each do |st|
     define_method "#{st}!" do
-      self.status = st
+      @status = st
     end
   end
 end

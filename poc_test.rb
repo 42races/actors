@@ -103,6 +103,7 @@ describe Actor do
     actor.run
     msg = Message.new('test')
     actor.send_message(msg)
+    sleep(1) # wait for the actor to process the message
     assert msg.processed?
   end
 
