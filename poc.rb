@@ -135,3 +135,12 @@ class Actor
     end
   end
 end
+
+class Supervisor
+  def initialize()
+    @address_pool = { default: [] }
+  end
+
+  def send_message(address, msg)
+  end
+end

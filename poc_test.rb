@@ -108,3 +108,12 @@ describe Actor do
   end
 
 end
+
+describe Supervisor do
+
+  let(:supervisor) { Supervisor.new }
+
+  it "Initializes supervisor" do
+    assert supervisor
+  end
+end
